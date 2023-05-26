@@ -44,10 +44,16 @@ public class Player : MonoBehaviour
     /// </summary>
     private bool onGround;
 
+    /// <summary>
+    /// Zeiger auf die Animationskomponente der Spielfigur
+    /// </summary>
+    private Animator anim;
+
     // Wird zur Initialisierung ausgeführt.
     private void Start()
     {
         rigid = GetComponent<Rigidbody>();
+        anim = GetComponentInChildren<Animator>();
     }
 
     // Update is called once per frame
@@ -55,6 +61,7 @@ public class Player : MonoBehaviour
     {
         // Eingabesingnal fürs Laufen
         float h = Input.GetAxis("Horizontal");
+        anim.SetFloat("forward", Mathf.Abs(h));
 
         // vorwärts bewegen
         transform.position += h * speed * transform.forward;
@@ -80,6 +87,7 @@ public class Player : MonoBehaviour
         // Springen
         RaycastHit hitinfo;
         onGround = Physics.Raycast(transform.position + (Vector3.up * 0.1f), Vector3.down, out hitinfo, 0.12f);
+        anim.SetBool("grounded", onGround);
         if (Input.GetAxis("Jump") > 0 && onGround)
         {
             Vector3 power = rigid.velocity;
